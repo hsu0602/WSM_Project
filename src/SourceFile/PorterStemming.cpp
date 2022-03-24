@@ -22,7 +22,7 @@
 */
 
 #include <bits/stdc++.h>
-
+#include "../HeaderFile/PorterStemming.h"
 
 #define TRUE 1
 #define FALSE 0
@@ -42,7 +42,7 @@ static int k,k0,j;     /* j is a general offset into the string */
 
 /* cons(i) is TRUE <=> b[i] is a consonant. */
 
-int cons(int i)
+int PorterStemming::cons(int i)
 {  switch (b[i])
    {  case 'a': case 'e': case 'i': case 'o': case 'u': return FALSE;
       case 'y': return (i==k0) ? TRUE : !cons(i-1);
@@ -61,7 +61,7 @@ int cons(int i)
       ....
 */
 
-int m()
+int PorterStemming::m()
 {  int n = 0;
    int i = k0;
    while(TRUE)
@@ -88,14 +88,14 @@ int m()
 
 /* vowelinstem() is TRUE <=> k0,...j contains a vowel */
 
-int vowelinstem()
+int PorterStemming::vowelinstem()
 {  int i; for (i = k0; i <= j; i++) if (! cons(i)) return TRUE;
    return FALSE;
 }
 
 /* doublec(j) is TRUE <=> j,(j-1) contain a double consonant. */
 
-int doublec(int j)
+int PorterStemming::doublec(int j)
 {  if (j < k0+1) return FALSE;
    if (b[j] != b[j-1]) return FALSE;
    return cons(j);
@@ -110,7 +110,7 @@ int doublec(int j)
 
 */
 
-int cvc(int i)
+int PorterStemming::cvc(int i)
 {  if (i < k0+2 || !cons(i) || cons(i-1) || !cons(i-2)) return FALSE;
    {  int ch = b[i];
       if (ch == 'w' || ch == 'x' || ch == 'y') return FALSE;
@@ -120,7 +120,7 @@ int cvc(int i)
 
 /* ends(s) is TRUE <=> k0,...k ends with the string s. */
 
-int ends(char * s)
+int PorterStemming::ends(char * s)
 {  int length = s[0];
    if (s[length] != b[k]) return FALSE; /* tiny speed-up */
    if (length > k-k0+1) return FALSE;
@@ -132,7 +132,7 @@ int ends(char * s)
 /* setto(s) sets (j+1),...k to the characters in the string s, readjusting
    k. */
 
-void setto(char * s)
+void PorterStemming::setto(char * s)
 {  int length = s[0];
    memmove(b+j+1,s+1,length);
    k = j+length;
@@ -140,7 +140,7 @@ void setto(char * s)
 
 /* r(s) is used further down. */
 
-void r(char * s) { if (m() > 0) setto(s); }
+void PorterStemming::r(char * s) { if (m() > 0) setto(s); }
 
 /* step1ab() gets rid of plurals and -ed or -ing. e.g.
 
@@ -164,7 +164,7 @@ void r(char * s) { if (m() > 0) setto(s); }
 
 */
 
-void step1ab()
+void PorterStemming::step1ab()
 {  if (b[k] == 's')
    {  if (ends("\04" "sses")) k -= 2; else
       if (ends("\03" "ies")) setto("\01" "i"); else
@@ -188,14 +188,14 @@ void step1ab()
 
 /* step1c() turns terminal y to i when there is another vowel in the stem. */
 
-void step1c() { if (ends("\01" "y") && vowelinstem()) b[k] = 'i'; }
+void PorterStemming::step1c() { if (ends("\01" "y") && vowelinstem()) b[k] = 'i'; }
 
 
 /* step2() maps double suffices to single ones. so -ization ( = -ize plus
    -ation) maps to -ize etc. note that the string before the suffix must give
    m() > 0. */
 
-void step2() { switch (b[k-1])
+void PorterStemming::step2() { switch (b[k-1])
 {
     case 'a': if (ends("\07" "ational")) { r("\03" "ate"); break; }
               if (ends("\06" "tional")) { r("\04" "tion"); break; }
@@ -236,7 +236,7 @@ void step2() { switch (b[k-1])
 
 /* step3() deals with -ic-, -full, -ness etc. similar strategy to step2. */
 
-void step3() { switch (b[k])
+void PorterStemming::step3() { switch (b[k])
 {
     case 'e': if (ends("\05" "icate")) { r("\02" "ic"); break; }
               if (ends("\05" "ative")) { r("\00" ""); break; }
@@ -253,7 +253,7 @@ void step3() { switch (b[k])
 
 /* step4() takes off -ant, -ence etc., in context <c>vcvc<v>. */
 
-void step4()
+void PorterStemming::step4()
 {  switch (b[k-1])
     {  case 'a': if (ends("\02" "al")) break; return;
        case 'c': if (ends("\04" "ance")) break;
@@ -283,7 +283,7 @@ void step4()
 /* step5() removes a final -e if m() > 1, and changes -ll to -l if
    m() > 1. */
 
-void step5()
+void PorterStemming::step5()
 {  j = k;
    if (b[k] == 'e')
    {  int a = m();
@@ -301,7 +301,7 @@ void step5()
    file.
 */
 
-int stem(char * p, int i, int j)
+int PorterStemming::stem(char * p, int i, int j)
 {  b = p; k = j; k0 = i; /* copy the parameters into statics */
    if (k <= k0+1) return k; /*-DEPARTURE-*/
 
@@ -314,60 +314,3 @@ int stem(char * p, int i, int j)
    return k;
 }
 
-/*--------------------stemmer definition ends here------------------------*/
-
-static char * s;         /* a char * (=string) pointer; passed into b above */
-
-#define INC 50           /* size units in which s is increased */
-static int i_max = INC;  /* maximum offset in s */
-
-void increase_s()
-{  i_max += INC;
-   {  char * new_s = (char *) malloc(i_max+1);
-      { int i; for (i = 0; i < i_max; i++) new_s[i] = s[i]; } /* copy across */
-      free(s); s = new_s;
-   }
-}
-
-#define UC(ch) (ch <= 'Z' && ch >= 'A')
-#define LC(ch) (ch <= 'z' && ch >= 'a')
-#define LETTER(ch) (UC(ch) || LC(ch))
-#define FORCELC(ch) (ch-('A'-'a'))
-
-void stemfile(FILE * f)
-{  while(TRUE)
-   {  int ch = getc(f);
-      if (ch == EOF) return;
-      if (LETTER(ch))
-      {  int i = 0;
-         while(TRUE)
-         {  if (i == i_max) increase_s();
-
-            if UC(ch) ch = FORCELC(ch);
-            /* forces lower case. Remove this line to make the program work
-               exactly like the Muscat stemtext command. */
-
-            s[i] = ch; i++;
-            ch = getc(f);
-            if (!LETTER(ch)) { ungetc(ch,f); break; }
-         }
-         s[stem(s,0,i-1)+1] = 0;
-         /* the pevious line calls the stemmer and uses its result to
-            zero-terminate the string in s */
-         printf("%s",s);
-      }
-      else putchar(ch);
-   }
-}
-
-int main(int argc, char * argv[])
-{  int i;
-   s = (char *) malloc(i_max+1);
-   for (i = 1; i < argc; i++)
-   {  FILE * f = fopen(argv[i],"r");
-      if (f == 0) { fprintf(stderr,"File %s not found\n",argv[i]); exit(1); }
-      stemfile(f);
-   }
-   free(s);
-   return 0;
-}
