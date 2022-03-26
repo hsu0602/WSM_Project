@@ -1,0 +1,2 @@
+vmware, nvidia partner to make ai chip easier for busi to us
+(reuter) - vmware inc and nvidia corp on tuesdai announc an effort to make vmware’s softwar for manag data center work better with nvidia’s artifici intellig (ai) chip.

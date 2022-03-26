@@ -1,0 +1,2 @@
+global market-surg bond yield lead global equiti lower
+(add oil, gold settlement price)

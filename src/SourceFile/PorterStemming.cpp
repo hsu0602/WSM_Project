@@ -164,6 +164,9 @@ void PorterStemming::r(char * s) { if (m() > 0) setto(s); }
 
 */
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wwrite-strings"
+
 void PorterStemming::step1ab()
 {  if (b[k] == 's')
    {  if (ends("\04" "sses")) k -= 2; else
@@ -234,6 +237,7 @@ void PorterStemming::step2() { switch (b[k-1])
 
 } }
 
+
 /* step3() deals with -ic-, -full, -ness etc. similar strategy to step2. */
 
 void PorterStemming::step3() { switch (b[k])
@@ -279,6 +283,8 @@ void PorterStemming::step4()
     }
     if (m() > 1) k = j;
 }
+
+#pragma GCC diagnostic pop
 
 /* step5() removes a final -e if m() > 1, and changes -ll to -l if
    m() > 1. */

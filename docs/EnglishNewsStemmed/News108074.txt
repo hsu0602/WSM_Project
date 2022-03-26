@@ -1,0 +1,2 @@
+global market-stock dip as yield hold near on-year high
+(updat price, market activ, comment)

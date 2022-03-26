@@ -1,0 +1,2 @@
+nokia's covid detect system automat scan for temperatur, mask
+stockholm (reuter) - nokia ha creat an autom system that us a thermal camera and real-time video analyt to determin if a person ha covid-19 symptom and is wear a mask, part of effort to protect employe as thei return to work.
