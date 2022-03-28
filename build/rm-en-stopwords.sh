@@ -14,6 +14,6 @@ echo "Removing stop words from $input_dir to $output_dir"
 for eachfile in $input_files
 do
     echo -n "Removing stop words in $eachfile... "
-    sed -f ../docs/StopWords/EnglishStopwords-stemmed/rm-en-EnglishStopwords-anywhere.sed "$input_dir$eachfile" > "$output_dir$eachfile"
+    sed -f ../docs/StopWords/EnglishStopwords-stemmed/rm-en-EnglishStopwords-anywhere.sed "$input_dir$eachfile" | tr -d "[:punct:]" > "$output_dir$eachfile"
     echo "done"
 done
