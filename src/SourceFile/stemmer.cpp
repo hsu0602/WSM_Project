@@ -14,8 +14,8 @@ static int i_max = INC;  /* maximum offset in s */
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wwrite-strings"
 
-char *targetdir = "../docs/EnglishNews/";       /* target directory*/
-char *outputdir = "../docs/EnglishNewsStemmed/";    /* output directory*/
+char *targetdir;    /* target directory*/
+char *outputdir;    /* output directory*/
 
 #pragma GCC diagnostic pop
 
@@ -75,6 +75,9 @@ int main(int argc, char * argv[]){
 	int i;
 	DIR *dir;
 	struct dirent *ent;
+	targetdir = argv[1];
+	outputdir = argv[2];
+	std::cout << "Stemming files from " << targetdir << " to " << outputdir << std::endl;
 	if ((dir = opendir (targetdir)) != NULL) {
   	/* stem all the files and directories within directory */
 	  	while ((ent = readdir (dir)) != NULL) {
@@ -83,13 +86,14 @@ int main(int argc, char * argv[]){
 	  		strcpy(targetfile, targetdir);
 	  		strcat(targetfile , ent->d_name);
 	  		if(ent->d_name[0] == '.') continue;
+	  		//std::cout << ent-> d_name << std::endl;
 	  		FILE * f = fopen(targetfile,"r");
 	  		if (f == NULL) { 
 				fprintf(stderr, "File %s not found\n", ent->d_name);
 			}else{
-				printf("File %s is stemming...", ent->d_name);
+				printf("File %s is stemming... ", ent->d_name);
 				stemfile(f, ent->d_name);
-				printf("finished\n");
+				printf("done\n");
 			}
 			free(s);
 			fclose(f);
