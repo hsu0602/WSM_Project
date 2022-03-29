@@ -1,0 +1,2 @@
+board    flight  tokyo  pari  never take 
+tokyo reuter  fasten  seatbelt   flight depart  pari  never leav  ground
