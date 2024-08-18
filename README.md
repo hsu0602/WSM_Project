@@ -2,7 +2,7 @@
 
 This is a search system for searching Engilsh news from a one-line query base on Vector Space Model (VSM)
 
-## 助教改作業時的懶人包
+## Getting Started
 
 1. [github repo](https://github.com/hsu0602/WSM_Project.git) 
 
@@ -22,6 +22,6 @@ This is a search system for searching Engilsh news from a one-line query base on
 
 
 
-## Getting Started
+
 
 
